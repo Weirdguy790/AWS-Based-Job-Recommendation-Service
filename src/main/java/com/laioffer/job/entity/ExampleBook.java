@@ -7,18 +7,18 @@ public class ExampleBook {
     public double price;
     public String currency;
     public int pages;
-    public String series;
+    public String seriesname;
     public String language;
     public String isbn;
 
-    public ExampleBook(String title, String author, String date, double price, String currency, int pages, String series, String language, String isbn) {
+    public ExampleBook(String title, String author, String date, double price, String currency, int pages, String seriesname, String language, String isbn) {
         this.title = title;
         this.author = author;
         this.date = date;
         this.price = price;
         this.currency = currency;
         this.pages = pages;
-        this.series = series;
+        this.seriesname = seriesname;
         this.language = language;
         this.isbn = isbn;
     }
