@@ -22,32 +22,33 @@ public class GitHubClient {
 
     public List<Item> search(double lat, double lon, String keyword) {
         if (keyword == null) {
-            keyword = DEFAULT_KEYWORD;
+            keyword = DEFAULT_KEYWORD; //if keyword == null, then set it as the DEFAULT_KEYWORD, "engineer"
         }
 
 
         // eg. “hello world” => “hello%20world”
         try {
-            keyword = URLEncoder.encode(keyword, "UTF-8");    //transfer keyword to URL
+            keyword = URLEncoder.encode(keyword, "UTF-8");    //transfer input keyword to URL
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         String url = String.format(URL_TEMPLATE, keyword, lat, lon); //format URL from above
 
-        CloseableHttpClient httpclient = HttpClients.createDefault();
+        CloseableHttpClient httpclient = HttpClients.createDefault(); //create a new httpclient object
 
         // Create a custom response handler
         ResponseHandler<List<Item>> responseHandler = response -> {
             if (response.getStatusLine().getStatusCode() != 200) {
                 return Collections.emptyList(); //no results
             }
-            HttpEntity entity = response.getEntity();
+            HttpEntity entity = response.getEntity(); //entity: content in response
             if (entity == null) {
                 return Collections.emptyList(); //no results
             }
             //return EntityUtils.toString(entity); //entity type : application/json
             ObjectMapper mapper = new ObjectMapper();
-            Item[] itemArray = mapper.readValue(entity.getContent(), Item[].class); //.class :
+            Item[] itemArray = mapper.readValue(entity.getContent(), Item[].class); //.class : is used when there isn't an instance of the class available.
+                                                                                    //also is an object that represents the class Item[] on runtime.
             return Arrays.asList(itemArray);
         };
 
