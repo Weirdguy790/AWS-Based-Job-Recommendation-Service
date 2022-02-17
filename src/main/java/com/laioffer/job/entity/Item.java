@@ -1,4 +1,4 @@
-//map jsonString into a class
+//This class will hold for the job items throughout this project
 package com.laioffer.job.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

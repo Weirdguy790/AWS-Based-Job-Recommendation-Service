@@ -1,8 +1,10 @@
 /Users/veraqiu7239/Desktop/jupiter/src/main/java/com/laioffer/job/servlet/RecommendationServlet.java
 /Users/veraqiu7239/Desktop/jupiter/src/main/java/com/laioffer/job/entity/ExampleJob.java
+/Users/veraqiu7239/Desktop/jupiter/src/main/java/com/laioffer/job/external/GitHubClient.java
 /Users/veraqiu7239/Desktop/jupiter/src/main/java/com/laioffer/job/servlet/ExampleBookServlet.java
 /Users/veraqiu7239/Desktop/jupiter/src/main/java/com/laioffer/job/servlet/ExampleJobServlet.java
 /Users/veraqiu7239/Desktop/jupiter/src/main/java/com/laioffer/job/entity/ExampleBook.java
 /Users/veraqiu7239/Desktop/jupiter/src/main/java/com/laioffer/job/servlet/TestServlet.java
+/Users/veraqiu7239/Desktop/jupiter/src/main/java/com/laioffer/job/entity/Item.java
 /Users/veraqiu7239/Desktop/jupiter/src/main/java/com/laioffer/job/servlet/SearchServlet.java
 /Users/veraqiu7239/Desktop/jupiter/src/main/java/com/laioffer/job/entity/ExampleCoordinates.java
