@@ -13,10 +13,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.CharBuffer;
 
 @WebServlet(name = "ExampleBookServlet", urlPatterns = {"/example_book"})
 public class ExampleBookServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //we do this when we need to add a new book to the server
         JSONObject jsonRequest = new JSONObject(IOUtils.toString(request.getReader()));
         //we are manual parsing JSON
         String title = jsonRequest.getString("title");
@@ -38,6 +40,9 @@ public class ExampleBookServlet extends HttpServlet {
         System.out.println("Series is: " + series);
         System.out.println("Language is: " + language);
         System.out.println("ISBN is: " + isbn);
+
+
+
         //response to client that the food is being prepared
         response.setContentType("application/json");
         JSONObject jsonResponse = new JSONObject();
@@ -65,6 +70,7 @@ public class ExampleBookServlet extends HttpServlet {
 //        json.put("isbn", "0590353403");
 //        response.getWriter().print(json);
 
+          //no need to log in data manually, instead we could use Jackson to map in all the info
           response.setContentType("application/json");
           ObjectMapper mapper = new ObjectMapper();
           ExampleBook parameters = new ExampleBook("Harry Potter and the Sorcerer's Stone", "JK Rowling",
