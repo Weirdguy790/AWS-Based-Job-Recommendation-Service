@@ -19,13 +19,15 @@ public class SearchServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //input search keyword
         double lat = Double.parseDouble(request.getParameter("lat"));
         double lon = Double.parseDouble(request.getParameter("lon"));
-
+        //handle input
         GitHubClient client = new GitHubClient();
         List<Item> items = client.search(lat, lon, null);
-        //we will add more stuff here
+                                                  //we will add more stuff here
         ObjectMapper mapper = new ObjectMapper();
+        //return results
         response.setContentType("application/json");
         mapper.writeValue(response.getWriter(), items);
 

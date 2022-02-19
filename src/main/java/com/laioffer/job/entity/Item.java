@@ -37,7 +37,7 @@ public class Item {
 
         return location;
     }
-    @JsonProperty("company_logo") //if we dont add_, then it will be different from our expectation from GitHub
+    @JsonProperty("company_logo") //if we don't add_, then it will be different from our expectation from GitHub
                                   //necessary for camel case conversions, otherwise it won't appear in the response
     public String getCompanyLogo() {
 

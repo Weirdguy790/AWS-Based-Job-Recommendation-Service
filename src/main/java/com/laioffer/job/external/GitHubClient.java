@@ -12,9 +12,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.net.URLEncoder;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class GitHubClient {
     private static final String URL_TEMPLATE = "https://jobs.github.com/positions.json?description=%s&lat=%s&long=%s";  //%s : String 占位符
@@ -36,7 +34,7 @@ public class GitHubClient {
 
         CloseableHttpClient httpclient = HttpClients.createDefault(); //create a new httpclient object
 
-        // Create a custom response handler
+        // Create a custom response handler, get response in our ideal format
         ResponseHandler<List<Item>> responseHandler = response -> {
             if (response.getStatusLine().getStatusCode() != 200) {
                 return Collections.emptyList(); //no results
@@ -47,9 +45,14 @@ public class GitHubClient {
             }
             //return EntityUtils.toString(entity); //entity type : application/json
             ObjectMapper mapper = new ObjectMapper();
-            Item[] itemArray = mapper.readValue(entity.getContent(), Item[].class); //.class : is used when there isn't an instance of the class available.
-                                                                                    //also is an object that represents the class Item[] on runtime.
-            return Arrays.asList(itemArray);
+//            Item[] itemArray = mapper.readValue(entity.getContent(), Item[].class); //.class : is used when there isn't an instance of the class available.
+//                                                                                    //also is an object that represents the class Item[] on runtime.
+//            return Arrays.asList(itemArray);
+            List<Item> items = Arrays.asList(mapper.readValue(entity.getContent(), Item[].class));
+            //we didn't extract keywords from previous items, so now we return the items after extracted keywords
+            extractKeywords(items);
+            return items;
+
         };
 
         try {
@@ -58,5 +61,21 @@ public class GitHubClient {
             e.printStackTrace();
         }
         return Collections.emptyList();
+    }
+    //we use this private method to use extract in web by GitHubClient
+    private static void extractKeywords(List<Item> items) {
+        MonkeyLearnClient monkeyLearnClient = new MonkeyLearnClient();
+        //The articles we used for extracting
+        List<String> descriptions = new ArrayList<>();
+        for (Item item : items) {
+            String description = item.getDescription().replace("·", " ");
+            descriptions.add(description);
+
+        }
+        //Extract articles, and get keywords as response
+        List<Set<String>> keywordList = monkeyLearnClient.extract(descriptions);
+        for (int i = 0; i < items.size(); i++) {
+            items.get(i).setKeywords(keywordList.get(i));
+        }
     }
 }
