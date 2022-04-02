@@ -20,7 +20,7 @@ public class GitHubClient {
 
     public List<Item> search(double lat, double lon, String keyword) {
         if (keyword == null) {
-            keyword = DEFAULT_KEYWORD; //if keyword == null, then set it as the DEFAULT_KEYWORD, "engineer"
+            keyword = DEFAULT_KEYWORD; //if keyword == null, then will set it as the DEFAULT_KEYWORD, "engineer"
         }
 
 

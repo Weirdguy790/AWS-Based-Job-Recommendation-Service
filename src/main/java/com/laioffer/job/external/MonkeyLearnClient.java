@@ -73,8 +73,6 @@ public class MonkeyLearnClient {
         }
         return Collections.emptyList();
 
-
-
     }
 
     //the main let us run MonkeyLearnClient under its own configuration, to let us
