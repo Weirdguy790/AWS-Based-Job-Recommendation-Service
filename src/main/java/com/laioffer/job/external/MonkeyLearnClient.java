@@ -21,6 +21,7 @@ public class MonkeyLearnClient {
     private static final String AUTH_TOKEN = "5f72100313664b6c982ff05d90ce08ab03ed9ff8";
 
     public List<Set<String>> extract(List<String> articles){ //input : multiple texts; output: list of text's keywords, set makes all keywords unique
+        //The Java ObjectMapper is part of the Jackson library
         ObjectMapper mapper = new ObjectMapper();
         CloseableHttpClient httpClient = HttpClients.createDefault();
 
@@ -32,6 +33,7 @@ public class MonkeyLearnClient {
         String jsonBody;
         //transfer body to json
         try {
+            //.writeValueAsSting turns Java to Json
             jsonBody = mapper.writeValueAsString(body);
         } catch (JsonProcessingException e) {
             return Collections.emptyList();
@@ -53,6 +55,7 @@ public class MonkeyLearnClient {
             if (entity == null) {
                 return Collections.emptyList(); //
             }
+            //.readValue turns Json to Java
             ExtractResponseItem[] results = mapper.readValue(entity.getContent(), ExtractResponseItem[].class);
             List<Set<String>> keywordList = new ArrayList<>();
             //transfer the extracted keywords to List<Set<String>>
