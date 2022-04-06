@@ -22,6 +22,22 @@ public class Item {
     private Set<String> keywords; //provided by GitHub
     private boolean favorite; //user like and collect job positions
 
+
+    public Item() {
+    }
+
+    public Item(String id, String title, String location, String companyLogo, String url, String description, Set<String> keywords, boolean favorite) {
+        this.id = id;
+        this.title = title;
+        this.location = location;
+        this.companyLogo = companyLogo;
+        this.url = url;
+        this.description = description;
+        this.keywords = keywords;
+        this.favorite = favorite;
+    }
+
+
     @JsonProperty("id") //indicates mapping, not necessary if it's same as property name
     public String getId() { //set in stone, won't be changed. so no getter method
 
