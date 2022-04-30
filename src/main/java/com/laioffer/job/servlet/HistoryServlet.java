@@ -49,6 +49,7 @@ public class HistoryServlet extends HttpServlet {
             mapper.writeValue(response.getWriter(), new ResultResponse("Session Invalid"));
             return;
         }
+
         //get userID
         String userId = request.getParameter("user_id");
         //create connection
@@ -63,7 +64,7 @@ public class HistoryServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("application/json");
+
         ObjectMapper mapper = new ObjectMapper();
         //protect servlets
         HttpSession session = request.getSession(false);
@@ -74,7 +75,7 @@ public class HistoryServlet extends HttpServlet {
         }
 
         HistoryRequestBody body = mapper.readValue(request.getReader(), HistoryRequestBody.class);
-
+        response.setContentType("application/json");
         MySQLConnection connection = new MySQLConnection();
         connection.unsetFavoriteItems(body.userId, body.favorite.getId());
         connection.close();

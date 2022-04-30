@@ -1,7 +1,9 @@
 package com.laioffer.job.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.laioffer.job.entity.Item;
 import com.laioffer.job.entity.ResultResponse;
+import com.laioffer.job.recommendation.Recommendation;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet(name = "RecommendationServlet", urlPatterns = {"/recommendation"})
 public class RecommendationServlet extends HttpServlet {
@@ -25,5 +28,16 @@ public class RecommendationServlet extends HttpServlet {
             mapper.writeValue(response.getWriter(), new ResultResponse("Session Invalid"));
             return;
         }
+        //get userID
+        String userId = request.getParameter("user_id");
+        //get latitude and longitude
+        double lat = Double.parseDouble(request.getParameter("lat"));
+        double lon = Double.parseDouble(request.getParameter("lon"));
+
+        Recommendation recommendation = new Recommendation();
+        List<Item> items = recommendation.recommendItems(userId, lat, lon);
+        response.setContentType("application/json");
+        mapper.writeValue(response.getWriter(), items);
+
     }
 }
