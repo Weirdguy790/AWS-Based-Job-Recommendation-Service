@@ -2,6 +2,7 @@ package com.laioffer.job.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.laioffer.job.db.MySQLConnection;
+import com.laioffer.job.db.RedisConnection;
 import com.laioffer.job.entity.HistoryRequestBody;
 import com.laioffer.job.entity.Item;
 import com.laioffer.job.entity.ResultResponse;
@@ -13,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 @WebServlet(name = "HistoryServlet", urlPatterns = {"/history"})
@@ -34,6 +37,10 @@ public class HistoryServlet extends HttpServlet {
         //use the setFavoriteItem() that just implemented in MySQLConnection
         connection.setFavoriteItems(body.userId, body.favorite);
         connection.close();
+        //check Redis
+        RedisConnection redis = new RedisConnection();
+        redis.deleteFavoriteResult(body.userId);
+        redis.close();
 
         ResultResponse resultResponse = new ResultResponse("SUCCESS");
         mapper.writeValue(response.getWriter(), resultResponse);
@@ -52,11 +59,19 @@ public class HistoryServlet extends HttpServlet {
 
         //get userID
         String userId = request.getParameter("user_id");
-        //create connection
-        MySQLConnection connection = new MySQLConnection();
-        Set<Item> items = connection.getFavoriteItems(userId);
-        //close connection
-        connection.close();
+        //check Redis
+        RedisConnection redis = new RedisConnection();
+        String cachedResult = redis.getFavoriteResult(userId);
+        Set<Item> items = null;
+        if (cachedResult != null) {
+            items = new HashSet<>(Arrays.asList(mapper.readValue(cachedResult, Item[].class)));
+        } else {
+            MySQLConnection connection = new MySQLConnection();
+            items = connection.getFavoriteItems(userId);
+            connection.close();
+            redis.setFavoriteResult(userId, mapper.writeValueAsString(items));
+        }
+        redis.close();
         //get response
         mapper.writeValue(response.getWriter(), items);
 
@@ -79,6 +94,11 @@ public class HistoryServlet extends HttpServlet {
         MySQLConnection connection = new MySQLConnection();
         connection.unsetFavoriteItems(body.userId, body.favorite.getId());
         connection.close();
+
+        //check Redis
+        RedisConnection redis = new RedisConnection();
+        redis.deleteFavoriteResult(body.userId);
+        redis.close();
 
         ResultResponse resultResponse = new ResultResponse("SUCCESS");
         mapper.writeValue(response.getWriter(), resultResponse);

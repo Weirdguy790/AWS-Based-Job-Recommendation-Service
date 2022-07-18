@@ -1,4 +1,4 @@
-;(function () {
+(function () {
     // get all elements
     var oAvatar = document.getElementById('avatar'),
         oWelcomeMsg = document.getElementById('welcome-msg'),
@@ -29,10 +29,10 @@
         // default data
         userId = '1111',
         userFullName = 'John',
-        // lng = -122.08,
-        // lat = 37.38,
-        lng = -122,
-        lat = 47,
+        lng = -122.08,
+        lat = 37.38,
+        // lng = -122,
+        // lat = 47,
         itemArr;
 
     // init
@@ -286,6 +286,7 @@
     function initGeo(cb) {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
+                    //github API is not in use anymore so we can't fetch any job info from it, thus we have a certain geolocatio
                     // lat = position.coords.latitude || lat;
                     // lng = position.coords.longitude || lng;
                     cb();
@@ -330,6 +331,8 @@
      * Helper - AJAX
      * @param opt
      */
+
+    //add helper function
     function ajax(opt) {
         var opt = opt || {},
             method = (opt.method || 'GET').toUpperCase(),

@@ -18,7 +18,7 @@ import java.util.*;
 
 public class MonkeyLearnClient {
     private static final String EXTRACT_URL = "https://api.monkeylearn.com/v3/extractors/ex_YCya9nrn/extract/";
-    private static final String AUTH_TOKEN = "5f72100313664b6c982ff05d90ce08ab03ed9ff8";
+    private static final String AUTH_TOKEN = "07a3d15c03e46ba56355e0705c3de7adb1a51a6b";
 
     public List<Set<String>> extract(List<String> articles){ //input : multiple texts; output: list of text's keywords, set makes all keywords unique
         //The Java ObjectMapper is part of the Jackson library

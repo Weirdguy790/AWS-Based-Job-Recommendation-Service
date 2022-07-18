@@ -2,6 +2,7 @@ package com.laioffer.job.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.laioffer.job.db.MySQLConnection;
+import com.laioffer.job.db.RedisConnection;
 import com.laioffer.job.entity.Item;
 import com.laioffer.job.entity.ResultResponse;
 import com.laioffer.job.external.GitHubClient;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -41,17 +43,28 @@ public class SearchServlet extends HttpServlet {
         //get favorited item IDs
         Set<String> favoritedItemIds = connection.getFavoriteItemIds(userId);
         connection.close();
-        //handle input
-        GitHubClient client = new GitHubClient();
-        List<Item> items = client.search(lat, lon, null);
-                                                  //we will add more stuff here
+        response.setContentType("application/json");
+        //check Redis
+        RedisConnection redis = new RedisConnection();
+        String cachedResult = redis.getSearchResult(lat, lon, null);
+
+        List<Item> items = null;
+        if (cachedResult != null) {
+            items = Arrays.asList(mapper.readValue(cachedResult, Item[].class)); //Jackson can only convert items to array, but we need to convert array to list
+        } else { //is cache is missed, then we still fetch data from GitHub
+            GitHubClient client = new GitHubClient();
+            items = client.search(lat, lon, null);
+            redis.setSearchResult(lat, lon, null, mapper.writeValueAsString(items));
+        }
+        redis.close();
+
         for (Item item : items) {
             //check if the favorite item existed in our favorite lists
             item.setFavorite(favoritedItemIds.contains(item.getId()));
         }
 
         //return results
-        response.setContentType("application/json");
+
         mapper.writeValue(response.getWriter(), items);
 
     }
